@@ -1,5 +1,7 @@
 var UserService = require('../services/user.service');
 var UserImgService =require('../services/userImg.service');
+var ProfileService = require('../services/profile.service');
+const User = require('../models/User.model');
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -27,6 +29,12 @@ exports.getUsersByMail = async function (req, res, next) {
     let filtro= {email: req.body.email}
     try {
         var Users = await UserService.getUsers(filtro, page, limit)
+        
+        //
+        console.log("RTA---->",Object.values(Users.docs)[0].user);
+        var Profiles = await ProfileService.getProfiles({user:Object.values(Users.docs)[0].user}, 1, 10);
+        Object.values(Profiles.docs).forEach(element => {console.log("foreach--->ID:",element.dni,)}); //ProfileService.deleteProfile(element.dni)
+        
         // Return the Users list with the appropriate HTTP password Code and Message.
         return res.status(200).json({status: 200, data: Users, message: "Succesfully Users Recieved"});
     } catch (e) {
@@ -106,6 +114,7 @@ exports.removeUser = async function (req, res, next) {
         if (deleted==0){
             return res.status(400).json({status: 400, data: id, message: "No se encontro el usuario."})
         }
+        //TODO
         res.status(200).send("Succesfully Deleted... ");
     } catch (e) {
         return res.status(400).json({status: 400, message: e.message})

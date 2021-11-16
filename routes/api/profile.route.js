@@ -13,7 +13,8 @@ router.get('/test', function(req, res, next) {
   });
 router.post('/createProfile',Authorization, ProfileController.createProfile)
 router.get('/',Authorization, ProfileController.getProfiles)
-router.post('/profileByUser', Authorization, ProfileController.getProfileByDNI)
+router.get('/profileByDNI', Authorization, ProfileController.getProfileByDNI)
+router.get('/profileByUser', Authorization, ProfileController.getProfileByUser)
 router.put('/', Authorization, ProfileController.updateProfile)
 router.delete('/:id', Authorization, ProfileController.removeProfile)
 router.post('/guardarImgProfile',ProfileController.guardarImagenProfile)

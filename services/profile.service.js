@@ -59,7 +59,7 @@ exports.createProfile = async function (_profile) {
     }
 }
 
-// Async function to get the Profile List
+// Async function to get the Profile List    
 exports.getProfiles = async function (query, page, limit) {
 
     // Options setup for the mongoose paginate
@@ -80,8 +80,6 @@ exports.getProfiles = async function (query, page, limit) {
         throw Error('Error while Paginating Profiles');
     }
 }
-
-
 
 exports.updateProfile = async function (profile) {
     

@@ -1,5 +1,6 @@
 var ProfileService = require('../services/profile.service');
 var ProfileImgService =require('../services/profileImg.service');
+var Profile = require('../models/Profile.model');
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -58,13 +59,33 @@ exports.getProfiles = async function (req, res, next) {
     }
 }
 exports.getProfileByDNI = async function (req, res, next) {
-
+    console.log("dentro de getProfilebyDNI en profiles.controller--->dni=",req.body);
     // Check the existence of the query parameters, If doesn't exists assign a default value
     var page = req.query.page ? req.query.page : 1
     var limit = req.query.limit ? req.query.limit : 10;
     let filtro= {dni: req.body.dni}
+    
     try {
         var Profiles = await ProfileService.getProfiles(filtro, page, limit)
+        // Return the Profiles list with the appropriate HTTP password Code and Message.
+        return res.status(200).json({status: 200, data: Profiles, message: "Succesfully Profiles Recieved"});
+    } catch (e) {
+        //Return an Error Response Message with Code and the Error Message.
+        return res.status(400).json({status: 400, message: e.message});
+    }
+}
+
+exports.getProfileByUser = async function (req, res, next) {
+
+    // Check the existence of the query parameters, If doesn't exists assign a default value
+    var page = req.query.page ? req.query.page : 1
+    var limit = req.query.limit ? req.query.limit : 10;
+    let filtro= {user: req.body.user}
+    //console.log("profiles.conroller.js----> filtro: ",filtro);
+    try {
+        
+        var Profiles = await ProfileService.getProfiles(filtro, page, limit);
+        //console.log("profiles.conroller.js----> Obtiene esto: ",Object.values(Profiles.docs));
         // Return the Profiles list with the appropriate HTTP password Code and Message.
         return res.status(200).json({status: 200, data: Profiles, message: "Succesfully Profiles Recieved"});
     } catch (e) {
