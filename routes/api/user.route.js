@@ -15,6 +15,7 @@ router.post("/login/", UserController.loginUser);
 router.get("/", Authorization, UserController.getUsers);
 router.get("/userByMail", Authorization, UserController.getUsersByMail);
 router.put("/", Authorization, UserController.updateUser);
+router.put("/password", Authorization, UserController.updatePassword);
 router.delete("/:user", Authorization, UserController.removeUser);
 router.post("/guardarImgUser", UserController.guardarImagenUser);
 router.post("/uploadImg", UploadController.uploadFilesImgUser);

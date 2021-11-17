@@ -128,6 +128,45 @@ exports.updateUser = async function (user) {
   }
 };
 
+exports.updatePassword = async function (user) {
+  var id = { user: user.user };
+  console.log("user", user);
+  try {
+    //Find the old User Object by the Id
+    var oldUser = await User.findOne(id);
+  } catch (e) {
+    throw Error("Error occured while Finding the User");
+  }
+  // If no old User Object exists return false
+  if (!oldUser) {
+    console.log(
+      "user.service.js -----> No se encontro el usuario para updatear."
+    );
+    return false;
+  }
+  console.log("user.service.js -----> Existe usuario para updatear.");
+  //Edit the User Object
+
+  const samePassword = bcrypt.compareSync(user.password, oldUser.password);
+  if (!samePassword) {
+    throw Error("Password does not match");
+  }
+
+  console.log("user.newpassword", user.newpassword);
+  oldUser.password = bcrypt.hashSync(user.newpassword, 8);
+  console.log("newpassword hash", oldUser.password);
+
+  try {
+    console.log(
+      "user.service.js -----> Guardo el usuario en la base de datos."
+    );
+    var savedUser = await oldUser.save();
+    return savedUser;
+  } catch (e) {
+    throw Error("And Error occured while updating the User");
+  }
+};
+
 exports.deleteUser = async function (id) {
   console.log("user.service.js---deleteUser--> Ingreso con id:", id);
   var _existID = await User.findOne({

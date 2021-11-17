@@ -131,6 +131,39 @@ exports.updateUser = async function (req, res, next) {
   }
 };
 
+exports.updatePassword = async function (req, res, next) {
+  // Id is necessary for the update
+  if (!req.body.user) {
+    return res
+      .status(400)
+      .json({ status: 400, message: "User must be present" });
+  }
+
+  var User = {
+    user: req.body.user,
+    password: req.body.password,
+    newpassword: req.body.newpassword,
+  };
+
+  try {
+    var updatedUser = await UserService.updatePassword(User);
+    if (!updatedUser) {
+      return res.status(400).json({
+        status: 400,
+        data: User,
+        message: "No se encontro el usuario.",
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      data: updatedUser,
+      message: "Succesfully Updated User",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
 exports.removeUser = async function (req, res, next) {
   var id = req.params.user;
   console.log("users.controller.js ------> Recibe de parametro id:", id);
