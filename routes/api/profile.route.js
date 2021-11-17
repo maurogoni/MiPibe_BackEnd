@@ -29,6 +29,7 @@ router.post(
 router.post("/uploadImg", UploadController.uploadFilesImgProfile); //TODO
 router.post("/sendMail", MailController.sendEmail);
 router.post("/addAllergy", ProfileController.addAllergy);
-
+router.post("/addIllness", ProfileController.addIllness);
+router.post("/addControl", ProfileController.addControl);
 // Export the Router
 module.exports = router;

@@ -17,8 +17,6 @@ exports.createProfile = async function (req, res, next) {
     user: req.body.user,
   };
 
-  console.log(Profile);
-
   try {
     // Calling the Service function with the new object from the Request Body
     var createdProfile = await ProfileService.createProfile(Profile);
@@ -225,6 +223,52 @@ exports.addAllergy = async function (req, res, next) {
   console.log("Profile", Profile);
   try {
     var updatedProfile = await ProfileService.addAllergy(Profile);
+    return res.status(200).json({
+      status: 200,
+      data: updatedProfile,
+      message: "Succesfully Updated Profile",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
+exports.addIllness = async function (req, res, next) {
+  // Id is necessary for the update
+  if (!req.body.dni) {
+    return res.status(400).json({ status: 400, message: "Name be present" });
+  }
+
+  var Profile = {
+    newIllness: req.body.newIllness,
+    dni: req.body.dni,
+  };
+
+  console.log("Profile", Profile);
+  try {
+    var updatedProfile = await ProfileService.addIllness(Profile);
+    return res.status(200).json({
+      status: 200,
+      data: updatedProfile,
+      message: "Succesfully Updated Profile",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
+exports.addControl = async function (req, res, next) {
+  // Id is necessary for the update
+  if (!req.body.dni) {
+    return res.status(400).json({ status: 400, message: "Name be present" });
+  }
+
+  var Profile = {
+    newControl: JSON.parse(req.body.newControl),
+    dni: req.body.dni,
+  };
+  try {
+    var updatedProfile = await ProfileService.addControl(Profile);
     return res.status(200).json({
       status: 200,
       data: updatedProfile,

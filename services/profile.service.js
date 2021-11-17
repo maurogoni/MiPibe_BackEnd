@@ -19,6 +19,7 @@ exports.createProfile = async function (_profile) {
     lastControl: "-",
     allergy: [],
     illness: [],
+    control: [],
     user: _profile.user,
     date: new Date(),
   });
@@ -167,6 +168,56 @@ exports.addAllergy = async function ({ dni, newAllergy }) {
   //Edit the Profile Object
 
   oldProfile.allergy = oldProfile.allergy.concat(newAllergy);
+
+  try {
+    var savedProfile = await oldProfile.save();
+    return savedProfile;
+  } catch (e) {
+    throw Error("And Error occured while updating the Profile");
+  }
+};
+
+exports.addIllness = async function ({ dni, newIllness }) {
+  var id = { dni: dni };
+
+  try {
+    //Find the old Profile Object by the Id
+    var oldProfile = await Profile.findOne(id);
+  } catch (e) {
+    throw Error("Error occured while Finding the Profile");
+  }
+  // If no old Profile Object exists return false
+  if (!oldProfile) {
+    return false;
+  }
+  //Edit the Profile Object
+
+  oldProfile.illness = oldProfile.illness.concat(newIllness);
+
+  try {
+    var savedProfile = await oldProfile.save();
+    return savedProfile;
+  } catch (e) {
+    throw Error("And Error occured while updating the Profile");
+  }
+};
+
+exports.addControl = async function ({ dni, newControl }) {
+  var id = { dni: dni };
+
+  try {
+    //Find the old Profile Object by the Id
+    var oldProfile = await Profile.findOne(id);
+  } catch (e) {
+    throw Error("Error occured while Finding the Profile");
+  }
+  // If no old Profile Object exists return false
+  if (!oldProfile) {
+    return false;
+  }
+  //Edit the Profile Object
+
+  oldProfile.control = oldProfile.control.concat(newControl);
 
   try {
     var savedProfile = await oldProfile.save();
