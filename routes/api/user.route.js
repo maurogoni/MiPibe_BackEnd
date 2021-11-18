@@ -11,7 +11,7 @@ router.get("/test", function (req, res, next) {
   res.send("Llegaste a la ruta de  api/user.routes");
 });
 router.post("/registration", UserController.createUser);
-router.post("/login/", UserController.loginUser);
+router.post("/login", UserController.loginUser);
 router.get("/", Authorization, UserController.getUsers);
 router.get("/userByMail", Authorization, UserController.getUsersByMail);
 router.put("/", Authorization, UserController.updateUser);
@@ -25,7 +25,7 @@ router.post(
   UserController.getImagenUserByMail
 );
 router.post("/sendMail", MailController.sendEmail);
-
+router.post("/forgotPassword", UserController.forgotPassword);
 // Export the Router
 module.exports = router;
 
