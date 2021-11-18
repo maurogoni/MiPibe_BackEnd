@@ -10,6 +10,6 @@ var ProfileImgSchema = new mongoose.Schema({
 })
 
 ProfileImgSchema.plugin(mongoosePaginate)
-const ProfileImg = mongoose.model('PerfilImagen', ProfileImgSchema)
+const ProfileImg = mongoose.model('ProfileImgDB', ProfileImgSchema)
 
 module.exports = ProfileImg;

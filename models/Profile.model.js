@@ -12,7 +12,9 @@ var ProfileSchema = new mongoose.Schema({
     allergy: String,
     illness: String,
     user: String,
-    date: Date
+    date: Date,
+    url: String,
+    publicIdImage: String
 })
 
 ProfileSchema.plugin(mongoosePaginate)

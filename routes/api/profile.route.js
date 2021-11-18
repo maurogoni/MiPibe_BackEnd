@@ -17,8 +17,8 @@ router.get('/profileByDNI', Authorization, ProfileController.getProfileByDNI)
 router.get('/profileByUser', Authorization, ProfileController.getProfileByUser)
 router.put('/', Authorization, ProfileController.updateProfile)
 router.delete('/:id', Authorization, ProfileController.removeProfile)
-router.post('/guardarImgProfile',ProfileController.guardarImagenProfile)
-router.post('/imgProfileByMail',Authorization,ProfileController.getImagenProfileByDNI)
+router.post('/saveImgProfile',ProfileController.saveImageProfile) //Sube la imagen a la nube y devuelve url + datos
+//router.post('/imgProfileByMail',Authorization,ProfileController.getImagenProfileByDNI)
 router.post('/uploadImg',UploadController.uploadFilesImgProfile);  //TODO
 router.post('/sendMail',MailController.sendEmail)
 
