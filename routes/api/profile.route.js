@@ -20,17 +20,13 @@ router.get(
 );
 router.put("/", Authorization, ProfileController.updateProfile);
 router.delete("/:dni", Authorization, ProfileController.removeProfile);
-router.post("/guardarImgProfile", ProfileController.guardarImagenProfile);
-router.post(
-  "/imgProfileByMail",
-  Authorization,
-  ProfileController.getImagenProfileByDNI
-);
+router.post("/saveImgProfile", ProfileController.saveImageProfile); //Sube la imagen a la nube y devuelve url + datos
 router.post("/uploadImg", UploadController.uploadFilesImgProfile); //TODO
 router.post("/sendMail", MailController.sendEmail);
 router.post("/addAllergy", ProfileController.addAllergy);
 router.post("/addIllness", ProfileController.addIllness);
 router.post("/addControl", ProfileController.addControl);
 router.post("/addVaccine", ProfileController.addVaccine);
+
 // Export the Router
 module.exports = router;

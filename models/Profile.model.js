@@ -14,6 +14,8 @@ var ProfileSchema = new mongoose.Schema({
   vaccine: [],
   user: String,
   date: Date,
+  url: String,
+  publicIdImage: String,
 });
 
 ProfileSchema.plugin(mongoosePaginate);

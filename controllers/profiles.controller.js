@@ -15,6 +15,7 @@ exports.createProfile = async function (req, res, next) {
     dateBorn: req.body.dateBorn,
     bloodType: req.body.bloodType,
     user: req.body.user,
+    publicIdImage: req.body.publicIdImage,
   };
 
   try {
@@ -125,6 +126,8 @@ exports.updateProfile = async function (req, res, next) {
     surname: req.body.surname,
     dni: req.body.dni,
     bloodType: req.body.bloodType,
+    url: req.body.url ? req.body.url : null,
+    publicIdImage: req.body.publicIdImage ? req.body.publicIdImage : null,
   };
 
   console.log("Profile", Profile);
@@ -150,7 +153,7 @@ exports.removeProfile = async function (req, res, next) {
   }
 };
 
-exports.guardarImagenProfile = async function (req, res, next) {
+exports.saveImageProfile = async function (req, res, next) {
   console.log("ImgProfile", req.body);
   // Id is necessary for the update
   if (!req.body.dni) {
@@ -166,45 +169,19 @@ exports.guardarImagenProfile = async function (req, res, next) {
 
   try {
     if (ProfileImg.nombreImagen !== "") {
-      var newProfileImg = await ProfileImgService.createProfileImg(ProfileImg);
+      console.log(
+        "profiles.controllers.js;;saveImageProfile----Dentro de ProfileIMG--->",
+        ProfileImg
+      );
+      await ProfileImgService.createProfileImg(
+        ProfileImg.dni,
+        ProfileImg.nombreImagen
+      );
     }
 
     return res.status(201).json({ status: 201, message: "Imagen cargada" });
   } catch (e) {
     console.log("error guardar imagen", e);
-    return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.getImagenProfileByDNI = async function (req, res, next) {
-  // Check the existence of the query parameters, If doesn't exists assign a default value
-  var page = req.query.page ? req.query.page : 1;
-  var limit = req.query.limit ? req.query.limit : 10;
-  //obtener filtro
-  var filtro = {
-    dni: req.body.dni,
-  };
-  try {
-    var ProfilesImg = await ProfileImgService.getImagenesByUser(
-      filtro,
-      page,
-      limit
-    );
-    // Return the Profiles list with the appropriate HTTP password Code and Message.
-    console.log("profileByDni", ProfilesImg);
-    if (ProfilesImg.total === 0)
-      return res
-        .status(201)
-        .json({ status: 201, data: ProfilesImg, message: "No existe DNI" });
-    else
-      return res.status(200).json({
-        status: 200,
-        data: ProfilesImg,
-        message: "Succesfully Profiles Recieved",
-      });
-  } catch (e) {
-    //Return an Error Response Message with Code and the Error Message.
-    console.log(e);
     return res.status(400).json({ status: 400, message: e.message });
   }
 };

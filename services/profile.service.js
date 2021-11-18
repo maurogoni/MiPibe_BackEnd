@@ -23,6 +23,8 @@ exports.createProfile = async function (_profile) {
     vaccine: [],
     user: _profile.user,
     date: new Date(),
+    url: null,
+    publicIdImage: null,
   });
 
   try {
@@ -129,6 +131,8 @@ exports.updateProfile = async function (profile) {
   oldProfile.surname = profile.surname;
   oldProfile.dni = profile.dni;
   oldProfile.bloodType = profile.bloodType;
+  oldProfile.url = profile.url;
+  oldProfile.publicIdImage = profile.publicIdImage;
 
   try {
     var savedProfile = await oldProfile.save();
