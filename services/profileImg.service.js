@@ -117,6 +117,9 @@ exports.deleteProfileImg = async function (_dni) {
         throw Error("Error,  Profile doesn't exist.") 
     }else{
         cloudinary.uploader.destroy(existProfile.publicIdImage);
+        //existProfile.url=null;
+        //existProfile.publicIdImage=null;
+        //await ProfileService.updateProfile(existProfile);
         return true;
 
     }

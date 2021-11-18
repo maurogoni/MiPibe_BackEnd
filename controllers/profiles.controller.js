@@ -165,7 +165,7 @@ exports.saveImageProfile = async function (req, res, next) {
     }
 }
 
-exports.getImagenProfileByDNI = async function (req, res, next) {
+/*exports.getImagenProfileByDNI = async function (req, res, next) {
 
     // Check the existence of the query parameters, If doesn't exists assign a default value
     var page = req.query.page ? req.query.page : 1
@@ -188,5 +188,5 @@ exports.getImagenProfileByDNI = async function (req, res, next) {
         return res.status(400).json({status: 400, message: e.message});
     }
 }
-    
+ */   
     
