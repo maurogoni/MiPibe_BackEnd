@@ -11,6 +11,7 @@ var ProfileSchema = new mongoose.Schema({
   allergy: [],
   illness: [],
   control: [],
+  vaccine: [],
   user: String,
   date: Date,
 });

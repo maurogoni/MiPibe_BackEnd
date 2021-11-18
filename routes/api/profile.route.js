@@ -31,5 +31,6 @@ router.post("/sendMail", MailController.sendEmail);
 router.post("/addAllergy", ProfileController.addAllergy);
 router.post("/addIllness", ProfileController.addIllness);
 router.post("/addControl", ProfileController.addControl);
+router.post("/addVaccine", ProfileController.addVaccine);
 // Export the Router
 module.exports = router;

@@ -278,3 +278,28 @@ exports.addControl = async function (req, res, next) {
     return res.status(400).json({ status: 400, message: e.message });
   }
 };
+
+exports.addVaccine = async function (req, res, next) {
+  // Id is necessary for the update
+  if (!req.body.dni) {
+    return res.status(400).json({ status: 400, message: "Name be present" });
+  }
+
+  var Profile = {
+    dni: req.body.dni,
+    newVaccine: JSON.parse(req.body.newVaccine),
+  };
+
+  console.log("PROFF", Profile);
+
+  try {
+    var updatedProfile = await ProfileService.addVaccine(Profile);
+    return res.status(200).json({
+      status: 200,
+      data: updatedProfile,
+      message: "Succesfully Updated Profile",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};

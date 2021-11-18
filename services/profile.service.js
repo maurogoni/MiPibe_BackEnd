@@ -20,6 +20,7 @@ exports.createProfile = async function (_profile) {
     allergy: [],
     illness: [],
     control: [],
+    vaccine: [],
     user: _profile.user,
     date: new Date(),
   });
@@ -218,6 +219,31 @@ exports.addControl = async function ({ dni, newControl }) {
   //Edit the Profile Object
 
   oldProfile.control = oldProfile.control.concat(newControl);
+
+  try {
+    var savedProfile = await oldProfile.save();
+    return savedProfile;
+  } catch (e) {
+    throw Error("And Error occured while updating the Profile");
+  }
+};
+
+exports.addVaccine = async function ({ dni, newVaccine }) {
+  var id = { dni: dni };
+
+  try {
+    //Find the old Profile Object by the Id
+    var oldProfile = await Profile.findOne(id);
+  } catch (e) {
+    throw Error("Error occured while Finding the Profile");
+  }
+  // If no old Profile Object exists return false
+  if (!oldProfile) {
+    return false;
+  }
+  //Edit the Profile Object
+
+  oldProfile.vaccine = oldProfile.vaccine.concat(newVaccine);
 
   try {
     var savedProfile = await oldProfile.save();
