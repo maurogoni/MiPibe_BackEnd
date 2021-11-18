@@ -20,7 +20,9 @@ exports.createProfile = async function (_profile) {
         allergy: _profile.allergy,
         illness: _profile.illness,
         user: _profile.user,
-        date: new Date()
+        date: new Date(),
+        url: null,
+        publicIdImage: null
     })
     
     try {
@@ -84,10 +86,12 @@ exports.getProfiles = async function (query, page, limit) {
 exports.updateProfile = async function (profile) {
     
     var id = {dni :profile.dni}
-
+    console.log("Estoy buscando el perfil --------dentro del update---------->",id)
+    console.log("Estoy en profile.service.js el perfil pasado es --------dentro del update---------->",profile)
     try {
         //Find the old Profile Object by the Id
         var oldProfile = await Profile.findOne(id);
+        console.log("Obtengo perfil --------dentro del update---------->",oldProfile)
     } catch (e) {
         throw Error("Error occured while Finding the Profile")
     }
@@ -107,6 +111,8 @@ exports.updateProfile = async function (profile) {
     oldProfile.illness = profile.illness
     oldProfile.email = profile.email
     oldProfile.user = profile.user
+    oldProfile.url = profile.url
+    oldProfile.publicIdImage = profile.publicIdImage
 
     try {
         var savedProfile = await oldProfile.save()

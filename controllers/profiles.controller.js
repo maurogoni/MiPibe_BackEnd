@@ -17,7 +17,8 @@ exports.createProfile = async function (req, res, next) {
         lastControl: req.body.lastControl,
         allergy: req.body.allergy,
         illness: req.body.illness,
-        user: req.body.user
+        user: req.body.user,
+        publicIdImage: req.body.publicIdImage
     }
     try {
         // Calling the Service function with the new object from the Request Body
@@ -111,7 +112,11 @@ exports.updateProfile = async function (req, res, next) {
         bloodType: req.body.bloodType ? req.body.bloodType : null,
         lastControl: req.body.lastControl ? req.body.lastControl : null, //TODO: NO TENDRIA MUCHO SENTIDO.
         allergy: req.body.allergy ? req.body.allergy : null,
-        illness: req.body.illness ? req.body.illness : null
+        illness: req.body.illness ? req.body.illness : null,
+        url: req.body.url ? req.body.url : null,
+        publicIdImage: req.body.publicIdImage ? req.body.publicIdImage : null
+        
+
     }
     try {
         var updatedProfile = await ProfileService.updateProfile(Profile)
@@ -132,7 +137,7 @@ exports.removeProfile = async function (req, res, next) {
     }
 }
 
-exports.guardarImagenProfile = async function (req, res, next) {
+exports.saveImageProfile = async function (req, res, next) {
 
     console.log("ImgProfile",req.body)
     // Id is necessary for the update
@@ -148,7 +153,8 @@ exports.guardarImagenProfile = async function (req, res, next) {
     try {
         if (ProfileImg.nombreImagen!=='')
         {
-            var newProfileImg = await ProfileImgService.createProfileImg(ProfileImg);
+            console.log("profiles.controllers.js;;saveImageProfile----Dentro de ProfileIMG--->",ProfileImg);
+            await ProfileImgService.createProfileImg(ProfileImg.dni,ProfileImg.nombreImagen);
         }
         
         return res.status(201).json({status: 201, message: "Imagen cargada"});
