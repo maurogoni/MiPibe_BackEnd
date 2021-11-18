@@ -19,7 +19,7 @@ router.get(
   ProfileController.getProfileByUser
 );
 router.put("/", Authorization, ProfileController.updateProfile);
-router.delete("/:id", Authorization, ProfileController.removeProfile);
+router.delete("/:dni", Authorization, ProfileController.removeProfile);
 router.post("/guardarImgProfile", ProfileController.guardarImagenProfile);
 router.post(
   "/imgProfileByMail",

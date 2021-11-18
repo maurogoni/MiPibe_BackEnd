@@ -140,9 +140,10 @@ exports.updateProfile = async function (profile) {
 
 exports.deleteProfile = async function (dni) {
   // Delete the Profile
+  console.log("DNI", dni);
   try {
     var deleted = await Profile.remove({
-      _dni: dni,
+      dni: dni,
     });
     if (deleted.n === 0 && deleted.ok === 1) {
       throw Error("Profile Could not be deleted");
