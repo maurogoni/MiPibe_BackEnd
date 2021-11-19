@@ -22,6 +22,9 @@ exports.sendMail = async (to, subject, message) => {
     subject: subject,
     html: message,
   };
+
+  console.log(mailOptions);
+
   let info = await transporter.sendMail(mailOptions);
   return info;
 };
