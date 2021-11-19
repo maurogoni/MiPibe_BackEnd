@@ -59,6 +59,36 @@ exports.loginUser = async function (req, res, next) {
   }
 };
 
+exports.forgotPassword = async function (req, res, next) {
+  if (!req.body.email) {
+    return res
+      .status(400)
+      .json({ status: 400, message: "Email must be present" });
+  }
+
+  var User = {
+    email: req.body.email,
+  };
+
+  try {
+    var updatedUser = await UserService.forgotPassword(User);
+    if (!updatedUser) {
+      return res.status(400).json({
+        status: 400,
+        data: User,
+        message: "No se encontro el usuario.",
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      data: updatedUser,
+      message: "Mail con nueva contrasena enviado!",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
 // Async Controller function to get the To do List
 exports.getUsers = async function (req, res, next) {
   // Check the existence of the query parameters, If doesn't exists assign a default value
@@ -243,37 +273,6 @@ exports.getImagenUserByMail = async function (req, res, next) {
   } catch (e) {
     //Return an Error Response Message with Code and the Error Message.
     console.log(e);
-    return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.forgotPassword = async function (req, res, next) {
-  // Id is necessary for the update
-  if (!req.body.email) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "Email must be present" });
-  }
-
-  var User = {
-    email: req.body.email,
-  };
-
-  try {
-    var updatedUser = await UserService.forgotPassword(User);
-    if (!updatedUser) {
-      return res.status(400).json({
-        status: 400,
-        data: User,
-        message: "No se encontro el usuario.",
-      });
-    }
-    return res.status(200).json({
-      status: 200,
-      data: updatedUser,
-      message: "Succesfully Updated User",
-    });
-  } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });
   }
 };

@@ -1,9 +1,9 @@
 // Gettign the Newly created Mongoose Model we just created
 var User = require("../models/User.model");
+const { sendMail } = require("./mail.service");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const { json } = require("express");
-let nodemailer = require("nodemailer");
 
 // Saving the context of this module inside the _the variable
 _this = this;
@@ -73,6 +73,32 @@ exports.loginUser = async function (user) {
   } catch (e) {
     // return a Error message describing the reason
     throw Error("Error while Login User");
+  }
+};
+
+exports.forgotPassword = async function (user) {
+  try {
+    var storedUser = await User.findOne({ email: user.email });
+  } catch (e) {
+    throw Error("Error occured while Finding the User");
+  }
+  if (!storedUser) {
+    return 0;
+  }
+
+  const newPassword = Math.floor(Math.random() * 99999 + 99999);
+  storedUser.password = bcrypt.hashSync(newPassword.toString(), 8);
+
+  try {
+    await storedUser.save();
+    const info = await sendMail(
+      user.email,
+      "Recupero contrasena",
+      "<h1> Contrasena temporal  </h1><h3>" + newPassword.toString() + "</h3>"
+    );
+    return info;
+  } catch (e) {
+    throw Error("And Error occured while updating the User");
   }
 };
 
@@ -204,64 +230,5 @@ exports.deleteUser = async function (id) {
     return deleted;
   } catch (e) {
     throw Error("Error Occured while Deleting the User");
-  }
-};
-
-exports.forgotPassword = async function (user) {
-  var id = { email: user.email };
-
-  try {
-    var oldUser = await User.findOne(id);
-  } catch (e) {
-    throw Error("Error occured while Finding the User");
-  }
-  // If no old User Object exists return false
-  if (!oldUser) {
-    console.log(
-      "user.service.js -----> No se encontro el usuario para updatear."
-    );
-    return false;
-  }
-  console.log("user.service.js -----> Existe usuario para updatear.");
-  //Edit the User Object
-
-  const newPassword = Math.floor(Math.random() * 99999 + 99999);
-  console.log("user.newpassword", newPassword);
-  oldUser.password = bcrypt.hashSync(newPassword.toString(), 8);
-
-  try {
-    console.log(
-      "user.service.js -----> Guardo el usuario en la base de datos."
-    );
-    var savedUser = await oldUser.save();
-
-    var transporter = nodemailer.createTransport({
-      //host: 'svp-02715.fibercorp.local',
-      //secure: false,
-      port: 25,
-      service: "Gmail",
-      secure: false,
-      auth: {
-        user: "mipibeapp@gmail.com", //poner cuenta gmail
-        pass: "mipibe123", //contraseña cuenta  IMPORTANTE HABILITAR acceso apps poco seguras google
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-    // Definimos el email
-    var mailOptions = {
-      from: "mipibeapp@gmail.com",
-      to: user.email,
-      subject: "Recupero contrasena",
-      html:
-        "<h1> Contrasena temporal  </h1><h3>" +
-        newPassword.toString() +
-        "</h3>",
-    };
-    let info = await transporter.sendMail(mailOptions);
-    return info;
-  } catch (e) {
-    throw Error("And Error occured while updating the User");
   }
 };
