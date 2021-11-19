@@ -1,10 +1,46 @@
 var UserService = require("../services/user.service");
-var UserImgService = require("../services/userImg.service");
 var ProfileService = require("../services/profile.service");
 const User = require("../models/User.model");
 
 // Saving the context of this module inside the _the variable
 _this = this;
+
+exports.createUser = async function (req, res, next) {
+  var User = {
+    name: req.body.name,
+    surname: req.body.surname,
+    email: req.body.email,
+    user: req.body.user,
+    password: req.body.password,
+  };
+
+  try {
+    var createdUser = await UserService.createUser(User);
+    if (createdUser === 0) {
+      console.log("Error. mail existente: ==>>", User.email, "<<==");
+      var repeatedEmail = User.email;
+      return res.status(400).json({ message: "Error: mail ya en uso." });
+    } else {
+      if (createdUser === 1) {
+        console.log("Error. Usuario no disponible: ==>>", User.user, "<<==");
+        var repeatedUser = User.user;
+        return res.status(400).json({
+          message: "Error: nombre de usuario en uso.",
+          repeatedUser,
+        });
+      } else {
+        return res
+          .status(201)
+          .json({ createdUser, message: "Usuario creado con exito!" });
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ status: 400, message: "User Creation was unsuccesfull" });
+  }
+};
 
 // Async Controller function to get the To do List
 exports.getUsers = async function (req, res, next) {
@@ -52,48 +88,6 @@ exports.getUsersByMail = async function (req, res, next) {
   } catch (e) {
     //Return an Error Response Message with Code and the Error Message.
     return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.createUser = async function (req, res, next) {
-  // Req.Body contains the form submit values.
-  console.log("llegue al controller", req.body);
-  var User = {
-    name: req.body.name,
-    surname: req.body.surname,
-    email: req.body.email,
-    user: req.body.user,
-    password: req.body.password,
-  };
-  try {
-    // Calling the Service function with the new object from the Request Body
-    var createdUser = await UserService.createUser(User);
-    if (createdUser === 0) {
-      console.log("Error. mail existente: ==>>", User.email, "<<==");
-      var repeatedEmail = User.email;
-      return res
-        .status(400)
-        .json({ message: "Error: mail: in use.", repeatedEmail });
-    } else {
-      if (createdUser === 1) {
-        console.log("Error. Usuario no disponible: ==>>", User.user, "<<==");
-        var repeatedUser = User.user;
-        return res.status(400).json({
-          message: "Error: user not disponible, in use.",
-          repeatedUser,
-        });
-      } else {
-        return res
-          .status(201)
-          .json({ createdUser, message: "Succesfully Created User" });
-      }
-    }
-  } catch (e) {
-    //Return an Error Response Message with Code and the Error Message.
-    console.log(e);
-    return res
-      .status(400)
-      .json({ status: 400, message: "User Creation was Unsuccesfull" });
   }
 };
 

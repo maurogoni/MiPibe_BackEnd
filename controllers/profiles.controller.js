@@ -1,5 +1,4 @@
 var ProfileService = require("../services/profile.service");
-var ProfileImgService = require("../services/profileImg.service");
 var Profile = require("../models/Profile.model");
 
 // Saving the context of this module inside the _the variable

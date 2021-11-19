@@ -3,11 +3,48 @@ var User = require("../models/User.model");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const { json } = require("express");
-const { forgotPassword } = require("../controllers/mail.controller");
 let nodemailer = require("nodemailer");
 
 // Saving the context of this module inside the _the variable
 _this = this;
+
+exports.createUser = async function (_user) {
+  try {
+    const emailAlreadyInUse = await User.findOne({
+      email: _user.email,
+    });
+    var usernameAlreadyInUse = await User.findOne({
+      user: _user.user,
+    });
+
+    if (!emailAlreadyInUse && !usernameAlreadyInUse) {
+      var newUser = new User({
+        name: _user.name,
+        surname: _user.surname,
+        email: _user.email,
+        user: _user.user,
+        password: bcrypt.hashSync(_user.password, 8),
+        date: new Date(),
+      });
+
+      var savedUser = await newUser.save();
+
+      var token = jwt.sign({ id: savedUser._id }, process.env.SECRET, {
+        expiresIn: 86400, // expires in 24 hours
+      });
+      return token;
+    } else {
+      if (!usernameAlreadyInUse) {
+        return 0;
+      } else {
+        return 1;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    throw Error("Error while creating user");
+  }
+};
 
 // Async function to get the User List
 exports.getUsers = async function (query, page, limit) {
@@ -26,64 +63,6 @@ exports.getUsers = async function (query, page, limit) {
     // return a Error message describing the reason
     console.log("error services", e);
     throw Error("Error while Paginating Users");
-  }
-};
-
-exports.createUser = async function (_user) {
-  // Creating a new Mongoose Object by using the new keyword
-  var hashedPassword = bcrypt.hashSync(_user.password, 8);
-
-  var newUser = new User({
-    name: _user.name,
-    surname: _user.surname,
-    email: _user.email,
-    user: _user.user,
-    password: hashedPassword,
-    date: new Date(),
-  });
-
-  try {
-    var _existEmail = await User.findOne({
-      email: _user.email,
-    });
-    var _existUser = await User.findOne({
-      user: _user.user,
-    });
-    if (_existEmail == null && _existUser == null) {
-      console.log("======== Mail no registrado, se creara usuario ==========");
-      // Saving the User
-      var savedUser = await newUser.save();
-      var token = jwt.sign(
-        {
-          id: savedUser._id,
-        },
-        process.env.SECRET,
-        {
-          expiresIn: 86400, // expires in 24 hours
-        }
-      );
-      return token;
-    } else {
-      if (_existUser == null) {
-        console.log(
-          "======== El mail ya esta registrado con el siguiente Id ---->",
-          _existEmail._id,
-          "<----------- =========="
-        );
-        return 0;
-      } else {
-        console.log(
-          "======== Usuario no disponble, ya esta en uso. Id del usuario registrado: ---->",
-          _existUser._id,
-          "<----------- =========="
-        );
-        return 1;
-      }
-    }
-  } catch (e) {
-    // return a Error message describing the reason
-    console.log(e);
-    throw Error("Error while Creating User");
   }
 };
 

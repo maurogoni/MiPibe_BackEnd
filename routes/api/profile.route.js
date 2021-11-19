@@ -1,8 +1,6 @@
 var express = require("express");
 var router = express.Router();
 var ProfileController = require("../../controllers/profiles.controller");
-var UploadController = require("../../controllers/upload.controller");
-var MailController = require("../../controllers/mail.controller");
 var Authorization = require("../../auth/authorization");
 
 // Authorize each API with middleware and map to the Controller Functions
@@ -21,8 +19,6 @@ router.get(
 router.put("/", Authorization, ProfileController.updateProfile);
 router.delete("/:dni", Authorization, ProfileController.removeProfile);
 router.post("/saveImgProfile", ProfileController.saveImageProfile); //Sube la imagen a la nube y devuelve url + datos
-router.post("/uploadImg", UploadController.uploadFilesImgProfile); //TODO
-router.post("/sendMail", MailController.sendEmail);
 router.post("/addAllergy", ProfileController.addAllergy);
 router.post("/addIllness", ProfileController.addIllness);
 router.post("/addControl", ProfileController.addControl);
