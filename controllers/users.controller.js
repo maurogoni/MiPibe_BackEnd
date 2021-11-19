@@ -16,6 +16,10 @@ exports.createUser = async function (req, res, next) {
 
   try {
     var createdUser = await UserService.createUser(User);
+    if (createdUser === 2){
+      console.log("Error. mail con formato incorrecto: ==>>", User.email, "<<==");
+      return res.status(400).json({ message: "Error. mail con formato incorrecto:" });
+    }
     if (createdUser === 0) {
       console.log("Error. mail existente: ==>>", User.email, "<<==");
       return res.status(400).json({ message: "Error: mail ya en uso." });
@@ -33,6 +37,11 @@ exports.createUser = async function (req, res, next) {
           .json({ createdUser, message: "Usuario creado con exito!" });
       }
     }
+
+
+
+
+
   } catch (e) {
     console.log(e);
     return res

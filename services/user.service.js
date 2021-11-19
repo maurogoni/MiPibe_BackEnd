@@ -17,6 +17,13 @@ exports.createUser = async function (_user) {
       user: _user.user,
     });
 
+    var expReg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var esValido= expReg.test(_user.email);
+    if (!esValido){
+      //Formato de la direccion de mail invalida.
+      return 2;
+    }
+
     if (!emailAlreadyInUse && !usernameAlreadyInUse) {
       var newUser = new User({
         name: _user.name,
