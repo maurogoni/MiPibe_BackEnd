@@ -158,24 +158,8 @@ exports.getUsers = async function (req, res, next) {
   }
 };
 exports.getUsersByMail = async function (req, res, next) {
-  // Check the existence of the query parameters, If doesn't exists assign a default value
-  var page = req.query.page ? req.query.page : 1;
-  var limit = req.query.limit ? req.query.limit : 10;
-  let filtro = { email: req.query.email };
   try {
-    var Users = await UserService.getUsers(filtro, page, limit);
-
-    //
-    console.log("RTA---->", Object.values(Users.docs)[0].user);
-    var Profiles = await ProfileService.getProfiles(
-      { user: Object.values(Users.docs)[0].user },
-      1,
-      10
-    );
-    Object.values(Profiles.docs).forEach((element) => {
-      console.log("foreach--->ID:", element.dni);
-    }); //ProfileService.deleteProfile(element.dni)
-
+    var Users = await UserService.getUsers({ email: req.query.email });
     // Return the Users list with the appropriate HTTP password Code and Message.
     return res.status(200).json({
       status: 200,
