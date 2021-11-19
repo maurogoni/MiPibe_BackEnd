@@ -1,4 +1,3 @@
-// Gettign the Newly created Mongoose Model we just created
 var Profile = require("../models/Profile.model");
 var jwt = require("jsonwebtoken");
 var UserModel = require("../models/User.model");
@@ -8,8 +7,6 @@ const { json } = require("express");
 _this = this;
 
 exports.createProfile = async function (_profile) {
-  // Creating a new Mongoose Object by using the new keyword
-
   var newProfile = new Profile({
     name: _profile.name,
     surname: _profile.surname,
@@ -23,51 +20,27 @@ exports.createProfile = async function (_profile) {
     vaccine: [],
     user: _profile.user,
     date: new Date(),
-    url: null,
-    publicIdImage: null,
   });
 
   try {
-    var _existDNI = await Profile.findOne({
+    var DNIAlreadyInUse = await Profile.findOne({
       dni: _profile.dni,
     });
-    var _existUser = await UserModel.findOne({
+    var userExists = await UserModel.findOne({
       user: _profile.user,
     });
 
-    if (_existDNI == null) {
-      if (_existUser == null) {
-        console.log(
-          "======== Perfil no tiene usuario valido. Usuario no registrado: ---->",
-          _existUser,
-          "<----------- =========="
-        );
+    if (!DNIAlreadyInUse) {
+      if (!userExists) {
         return 0;
       } else {
-        console.log("======== DNI no registrado, se creara perfil ==========");
-        // Saving the Profile
         var savedProfile = await newProfile.save();
-        var token = jwt.sign(
-          {
-            id: savedProfile._id,
-          },
-          process.env.SECRET,
-          {
-            expiresIn: 86400, // expires in 24 hours
-          }
-        );
-        return token;
+        return savedProfile;
       }
     } else {
-      console.log(
-        "======== Perfil no disponble, ya esta en uso. DNI del usuario registrado: ---->",
-        _existDNI,
-        "<----------- =========="
-      );
       return 1;
     }
   } catch (e) {
-    // return a Error message describing the reason
     console.log(e);
     throw Error("Error while Creating Profile");
   }

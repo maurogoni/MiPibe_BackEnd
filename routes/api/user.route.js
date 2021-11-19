@@ -8,10 +8,12 @@ var Authorization = require("../../auth/authorization");
 
 router.post("/registration", UserController.createUser);
 router.post("/login", UserController.loginUser);
-router.get("/", Authorization, UserController.getUsers);
-router.get("/userByMail", Authorization, UserController.getUsersByMail);
+router.post("/forgotPassword", UserController.forgotPassword);
 router.put("/", Authorization, UserController.updateUser);
 router.put("/password", Authorization, UserController.updatePassword);
+
+router.get("/", Authorization, UserController.getUsers);
+router.get("/userByMail", Authorization, UserController.getUsersByMail);
 router.delete("/:user", Authorization, UserController.removeUser);
 router.post("/guardarImgUser", UserController.guardarImagenUser);
 router.post(
@@ -19,7 +21,6 @@ router.post(
   Authorization,
   UserController.getImagenUserByMail
 );
-router.post("/forgotPassword", UserController.forgotPassword);
 // Export the Router
 module.exports = router;
 

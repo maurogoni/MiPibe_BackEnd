@@ -3,11 +3,6 @@ var router = express.Router();
 var ProfileController = require("../../controllers/profiles.controller");
 var Authorization = require("../../auth/authorization");
 
-// Authorize each API with middleware and map to the Controller Functions
-/* GET users listing. */
-router.get("/test", function (req, res, next) {
-  res.send("Llegaste a la ruta de  api/profile.routes");
-});
 router.post("/createProfile", Authorization, ProfileController.createProfile);
 router.get("/", Authorization, ProfileController.getProfiles);
 router.get("/profileByDNI", Authorization, ProfileController.getProfileByDNI);

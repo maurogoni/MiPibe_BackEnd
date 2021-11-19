@@ -5,8 +5,6 @@ var Profile = require("../models/Profile.model");
 _this = this;
 
 exports.createProfile = async function (req, res, next) {
-  // Req.Body contains the form submit values.
-  console.log("llegue al controller de PROFILE-->", req.body);
   var Profile = {
     name: req.body.name,
     surname: req.body.surname,
@@ -14,22 +12,18 @@ exports.createProfile = async function (req, res, next) {
     dateBorn: req.body.dateBorn,
     bloodType: req.body.bloodType,
     user: req.body.user,
-    publicIdImage: req.body.publicIdImage,
   };
 
   try {
-    // Calling the Service function with the new object from the Request Body
     var createdProfile = await ProfileService.createProfile(Profile);
     if (createdProfile === 0) {
-      console.log("Error. Usuario no registrado: ==>>", Profile.user, "<<==");
       var notExistUser = Profile.user;
-      return res.status(400).json({
+      return res.status(404).json({
         message: "Error: profile not created, not valid USER:",
         notExistUser,
       });
     } else {
       if (createdProfile === 1) {
-        console.log("Error. Perfil no disponible: ==>>", Profile.dni, "<<==");
         var repeatedDNI = Profile.dni;
         return res.status(400).json({
           message: "Error: Profile not disponible, in use.",
@@ -42,7 +36,6 @@ exports.createProfile = async function (req, res, next) {
       }
     }
   } catch (e) {
-    //Return an Error Response Message with Code and the Error Message.
     console.log(e);
     return res
       .status(400)
