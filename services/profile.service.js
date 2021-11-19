@@ -98,8 +98,6 @@ exports.updateProfile = async function (profile) {
 };
 
 exports.deleteProfile = async function (dni) {
-  // Delete the Profile
-  console.log("DNI", dni);
   try {
     var deleted = await Profile.remove({
       dni: dni,
@@ -114,24 +112,19 @@ exports.deleteProfile = async function (dni) {
 };
 
 exports.addAllergy = async function ({ dni, newAllergy }) {
-  var id = { dni: dni };
-
   try {
-    //Find the old Profile Object by the Id
-    var oldProfile = await Profile.findOne(id);
+    var storedProfile = await Profile.findOne({ dni: dni });
   } catch (e) {
     throw Error("Error occured while Finding the Profile");
   }
-  // If no old Profile Object exists return false
-  if (!oldProfile) {
+
+  if (!storedProfile) {
     return false;
   }
-  //Edit the Profile Object
 
-  oldProfile.allergy = oldProfile.allergy.concat(newAllergy);
-
+  storedProfile.allergy = storedProfile.allergy.concat(newAllergy);
   try {
-    var savedProfile = await oldProfile.save();
+    var savedProfile = await storedProfile.save();
     return savedProfile;
   } catch (e) {
     throw Error("And Error occured while updating the Profile");
@@ -139,24 +132,17 @@ exports.addAllergy = async function ({ dni, newAllergy }) {
 };
 
 exports.addIllness = async function ({ dni, newIllness }) {
-  var id = { dni: dni };
-
   try {
-    //Find the old Profile Object by the Id
-    var oldProfile = await Profile.findOne(id);
+    var storedProfile = await Profile.findOne({ dni: dni });
   } catch (e) {
     throw Error("Error occured while Finding the Profile");
   }
-  // If no old Profile Object exists return false
-  if (!oldProfile) {
+  if (!storedProfile) {
     return false;
   }
-  //Edit the Profile Object
-
-  oldProfile.illness = oldProfile.illness.concat(newIllness);
-
+  storedProfile.illness = storedProfile.illness.concat(newIllness);
   try {
-    var savedProfile = await oldProfile.save();
+    var savedProfile = await storedProfile.save();
     return savedProfile;
   } catch (e) {
     throw Error("And Error occured while updating the Profile");
