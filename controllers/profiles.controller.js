@@ -58,6 +58,26 @@ exports.getProfileByUser = async function (req, res, next) {
   }
 };
 
+exports.updateProfile = async function (req, res, next) {
+  var Profile = {
+    name: req.body.name,
+    surname: req.body.surname,
+    dni: req.body.dni,
+    bloodType: req.body.bloodType,
+  };
+
+  try {
+    var updatedProfile = await ProfileService.updateProfile(Profile);
+    return res.status(200).json({
+      status: 200,
+      data: updatedProfile,
+      message: "Succesfully Updated Profile",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
 // Async Controller function to get the To do List
 exports.getProfiles = async function (req, res, next) {
   // Check the existence of the query parameters, If doesn't exists assign a default value
@@ -96,34 +116,6 @@ exports.getProfileByDNI = async function (req, res, next) {
     });
   } catch (e) {
     //Return an Error Response Message with Code and the Error Message.
-    return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.updateProfile = async function (req, res, next) {
-  // Id is necessary for the update
-  if (!req.body.dni) {
-    return res.status(400).json({ status: 400, message: "Name be present" });
-  }
-
-  var Profile = {
-    name: req.body.name,
-    surname: req.body.surname,
-    dni: req.body.dni,
-    bloodType: req.body.bloodType,
-    url: req.body.url ? req.body.url : null,
-    publicIdImage: req.body.publicIdImage ? req.body.publicIdImage : null,
-  };
-
-  console.log("Profile", Profile);
-  try {
-    var updatedProfile = await ProfileService.updateProfile(Profile);
-    return res.status(200).json({
-      status: 200,
-      data: updatedProfile,
-      message: "Succesfully Updated Profile",
-    });
-  } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });
   }
 };

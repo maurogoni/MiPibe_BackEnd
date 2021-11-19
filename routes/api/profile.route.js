@@ -5,13 +5,14 @@ var Authorization = require("../../auth/authorization");
 
 router.post("/createProfile", Authorization, ProfileController.createProfile);
 router.get("/", Authorization, ProfileController.getProfiles);
+router.put("/", Authorization, ProfileController.updateProfile);
+
 router.get("/profileByDNI", Authorization, ProfileController.getProfileByDNI);
 router.get(
   "/profilesByUser",
   Authorization,
   ProfileController.getProfileByUser
 );
-router.put("/", Authorization, ProfileController.updateProfile);
 router.delete("/:dni", Authorization, ProfileController.removeProfile);
 router.post("/saveImgProfile", ProfileController.saveImageProfile); //Sube la imagen a la nube y devuelve url + datos
 router.post("/addAllergy", ProfileController.addAllergy);

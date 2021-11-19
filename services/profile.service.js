@@ -76,29 +76,21 @@ exports.getProfilesByUser = async function (query, page, limit) {
 };
 
 exports.updateProfile = async function (profile) {
-  var id = { dni: profile.dni };
-
   try {
-    //Find the old Profile Object by the Id
-    var oldProfile = await Profile.findOne(id);
+    var storedProfile = await Profile.findOne({ dni: profile.dni });
   } catch (e) {
     throw Error("Error occured while Finding the Profile");
   }
-  // If no old Profile Object exists return false
-  if (!oldProfile) {
+  if (!storedProfile) {
     return false;
   }
-  //Edit the Profile Object
 
-  oldProfile.name = profile.name;
-  oldProfile.surname = profile.surname;
-  oldProfile.dni = profile.dni;
-  oldProfile.bloodType = profile.bloodType;
-  oldProfile.url = profile.url;
-  oldProfile.publicIdImage = profile.publicIdImage;
+  storedProfile.name = profile.name;
+  storedProfile.surname = profile.surname;
+  storedProfile.bloodType = profile.bloodType;
 
   try {
-    var savedProfile = await oldProfile.save();
+    var savedProfile = await storedProfile.save();
     return savedProfile;
   } catch (e) {
     throw Error("And Error occured while updating the Profile");
