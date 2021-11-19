@@ -89,6 +89,56 @@ exports.forgotPassword = async function (req, res, next) {
   }
 };
 
+exports.updateUser = async function (req, res, next) {
+  if (
+    !req.body.name ||
+    !req.body.surname ||
+    !req.body.email ||
+    !req.body.user ||
+    !req.body.password
+  ) {
+    return res.status(500).json({ status: 500, message: "Invalido" });
+  }
+
+  var User = {
+    name: req.body.name,
+    surname: req.body.surname,
+    email: req.body.email,
+    user: req.body.user,
+    password: req.body.password,
+  };
+  try {
+    var updatedUser = await UserService.updateUser(User);
+    if (updatedUser === 0) {
+      return res.status(404).json({
+        status: 404,
+        data: User,
+        message: "No se encontro el usuario.",
+      });
+    } else if (updatedUser === 1) {
+      return res.status(400).json({
+        status: 400,
+        data: User,
+        message: "Password invalid",
+      });
+    } else if (updatedUser === 2) {
+      return res.status(409).json({
+        status: 409,
+        data: User,
+        message: "Email already in use",
+      });
+    } else {
+      return res.status(200).json({
+        status: 200,
+        data: updatedUser,
+        message: "Succesfully Updated User",
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({ status: 500, message: e.message });
+  }
+};
+
 // Async Controller function to get the To do List
 exports.getUsers = async function (req, res, next) {
   // Check the existence of the query parameters, If doesn't exists assign a default value
@@ -134,40 +184,6 @@ exports.getUsersByMail = async function (req, res, next) {
     });
   } catch (e) {
     //Return an Error Response Message with Code and the Error Message.
-    return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.updateUser = async function (req, res, next) {
-  // Id is necessary for the update
-  if (!req.body.user) {
-    return res
-      .status(400)
-      .json({ status: 400, message: "User must be present" });
-  }
-
-  var User = {
-    name: req.body.name ? req.body.name : null,
-    surname: req.body.surname ? req.body.surname : null,
-    email: req.body.email ? req.body.email : null,
-    user: req.body.user ? req.body.user : null,
-    password: req.body.password ? req.body.password : null,
-  };
-  try {
-    var updatedUser = await UserService.updateUser(User);
-    if (!updatedUser) {
-      return res.status(400).json({
-        status: 400,
-        data: User,
-        message: "No se encontro el usuario.",
-      });
-    }
-    return res.status(200).json({
-      status: 200,
-      data: updatedUser,
-      message: "Succesfully Updated User",
-    });
-  } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });
   }
 };

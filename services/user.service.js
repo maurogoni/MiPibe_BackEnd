@@ -102,6 +102,40 @@ exports.forgotPassword = async function (user) {
   }
 };
 
+exports.updateUser = async function (user) {
+  try {
+    var storedUser = await User.findOne({ user: user.user });
+  } catch (e) {
+    throw Error("Error occured while Finding the User");
+  }
+  if (!storedUser) {
+    return 0;
+  }
+
+  var hashedPassword = bcrypt.hashSync(user.password, 8);
+  const samePassword = bcrypt.compareSync(user.password, storedUser.password);
+  if (!samePassword) {
+    return 1;
+  }
+
+  const userOfEmail = await User.findOne({ email: user.email });
+  if (userOfEmail.user !== storedUser.user) {
+    return 2;
+  }
+
+  storedUser.name = user.name;
+  storedUser.surname = user.surname;
+  storedUser.email = user.email;
+  storedUser.user = user.user;
+  storedUser.password = hashedPassword;
+  try {
+    var savedUser = await storedUser.save();
+    return savedUser;
+  } catch (e) {
+    throw Error("And Error occured while updating the User");
+  }
+};
+
 // Async function to get the User List
 exports.getUsers = async function (query, page, limit) {
   // Options setup for the mongoose paginate
@@ -119,49 +153,6 @@ exports.getUsers = async function (query, page, limit) {
     // return a Error message describing the reason
     console.log("error services", e);
     throw Error("Error while Paginating Users");
-  }
-};
-
-exports.updateUser = async function (user) {
-  var id = { user: user.user };
-
-  try {
-    //Find the old User Object by the Id
-    var oldUser = await User.findOne(id);
-  } catch (e) {
-    throw Error("Error occured while Finding the User");
-  }
-  // If no old User Object exists return false
-  if (!oldUser) {
-    console.log(
-      "user.service.js -----> No se encontro el usuario para updatear."
-    );
-    return false;
-  }
-  console.log("user.service.js -----> Existe usuario para updatear.");
-  //Edit the User Object
-  var hashedPassword = bcrypt.hashSync(user.password, 8);
-
-  const samePassword = bcrypt.compareSync(user.password, oldUser.password);
-  if (!samePassword) {
-    throw Error("Password does not match");
-  }
-
-  console.log("samePassword", samePassword);
-
-  oldUser.name = user.name;
-  oldUser.surname = user.surname;
-  oldUser.email = user.email;
-  oldUser.user = user.user;
-  oldUser.password = hashedPassword;
-  try {
-    console.log(
-      "user.service.js -----> Guardo el usuario en la base de datos."
-    );
-    var savedUser = await oldUser.save();
-    return savedUser;
-  } catch (e) {
-    throw Error("And Error occured while updating the User");
   }
 };
 
