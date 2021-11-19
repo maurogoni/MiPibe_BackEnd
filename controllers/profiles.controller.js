@@ -43,6 +43,21 @@ exports.createProfile = async function (req, res, next) {
   }
 };
 
+exports.getProfileByUser = async function (req, res, next) {
+  try {
+    var Profiles = await ProfileService.getProfiles({
+      user: req.query.username,
+    });
+    return res.status(200).json({
+      status: 200,
+      data: Profiles,
+      message: "Succesfully Profiles Recieved",
+    });
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e.message });
+  }
+};
+
 // Async Controller function to get the To do List
 exports.getProfiles = async function (req, res, next) {
   // Check the existence of the query parameters, If doesn't exists assign a default value
@@ -73,28 +88,6 @@ exports.getProfileByDNI = async function (req, res, next) {
 
   try {
     var Profiles = await ProfileService.getProfiles(filtro, page, limit);
-    // Return the Profiles list with the appropriate HTTP password Code and Message.
-    return res.status(200).json({
-      status: 200,
-      data: Profiles,
-      message: "Succesfully Profiles Recieved",
-    });
-  } catch (e) {
-    //Return an Error Response Message with Code and the Error Message.
-    return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.getProfileByUser = async function (req, res, next) {
-  // Check the existence of the query parameters, If doesn't exists assign a default value
-  var page = req.query.page ? req.query.page : 1;
-  var limit = req.query.limit ? req.query.limit : 10;
-  let filtro = { user: req.query.username };
-
-  //console.log("profiles.conroller.js----> filtro: ",filtro);
-  try {
-    var Profiles = await ProfileService.getProfiles(filtro, page, limit);
-    //console.log("profiles.conroller.js----> Obtiene esto: ",Object.values(Profiles.docs));
     // Return the Profiles list with the appropriate HTTP password Code and Message.
     return res.status(200).json({
       status: 200,

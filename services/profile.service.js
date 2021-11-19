@@ -46,21 +46,11 @@ exports.createProfile = async function (_profile) {
   }
 };
 
-// Async function to get the Profile List
-exports.getProfiles = async function (query, page, limit) {
-  // Options setup for the mongoose paginate
-  var options = {
-    page,
-    limit,
-  };
-  // Try Catch the awaited promise to handle the error
+exports.getProfiles = async function (query) {
   try {
-    console.log("Query Profiles:", query);
-    var Profiles = await Profile.paginate(query, options);
-    // Return the Profile list that was retured by the mongoose promise
+    var Profiles = await Profile.find(query);
     return Profiles;
   } catch (e) {
-    // return a Error message describing the reason
     console.log("error services", e);
     throw Error("Error while Paginating Profiles");
   }
