@@ -18,7 +18,6 @@ exports.createUser = async function (req, res, next) {
     var createdUser = await UserService.createUser(User);
     if (createdUser === 0) {
       console.log("Error. mail existente: ==>>", User.email, "<<==");
-      var repeatedEmail = User.email;
       return res.status(400).json({ message: "Error: mail ya en uso." });
     } else {
       if (createdUser === 1) {
@@ -39,6 +38,24 @@ exports.createUser = async function (req, res, next) {
     return res
       .status(400)
       .json({ status: 400, message: "User Creation was unsuccesfull" });
+  }
+};
+
+exports.loginUser = async function (req, res, next) {
+  var User = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  try {
+    var loginUser = await UserService.loginUser(User);
+    if (!loginUser) {
+      return res.status(404).json({ loginUser, message: "Usuario invalido!" });
+    }
+    return res.status(201).json({ loginUser, message: "Bienvenido!" });
+  } catch (e) {
+    return res
+      .status(400)
+      .json({ status: 400, message: "Invalid username or password" });
   }
 };
 
@@ -172,25 +189,6 @@ exports.removeUser = async function (req, res, next) {
     res.status(200).send("Succesfully Deleted... ");
   } catch (e) {
     return res.status(400).json({ status: 400, message: e.message });
-  }
-};
-
-exports.loginUser = async function (req, res, next) {
-  // Req.Body contains the form submit values.
-  console.log("body", req.body);
-  var User = {
-    email: req.body.email,
-    password: req.body.password,
-  };
-  try {
-    // Calling the Service function with the new object from the Request Body
-    var loginUser = await UserService.loginUser(User);
-    return res.status(201).json({ loginUser, message: "Succesfully login" });
-  } catch (e) {
-    //Return an Error Response Message with Code and the Error Message.
-    return res
-      .status(400)
-      .json({ status: 400, message: "Invalid username or password" });
   }
 };
 
