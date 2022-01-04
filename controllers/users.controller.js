@@ -194,9 +194,10 @@ exports.loginUser = async function (req, res, next) {
     return res.status(201).json({ loginUser, message: "Succesfully login" });
   } catch (e) {
     //Return an Error Response Message with Code and the Error Message.
+    console.log(e);
     return res
-      .status(400)
-      .json({ status: 400, message: "Invalid username or password" });
+      .status(404)
+      .json({ status: 404, message: "Invalid username or password" });
   }
 };
 
@@ -259,8 +260,8 @@ exports.forgotPassword = async function (req, res, next) {
   // Id is necessary for the update
   if (!req.body.email) {
     return res
-      .status(400)
-      .json({ status: 400, message: "Email must be present" });
+      .status(406)
+      .json({ status: 406, message: "Email must be present" });
   }
 
   var User = {
@@ -270,8 +271,8 @@ exports.forgotPassword = async function (req, res, next) {
   try {
     var updatedUser = await UserService.forgotPassword(User);
     if (!updatedUser) {
-      return res.status(400).json({
-        status: 400,
+      return res.status(404).json({
+        status: 404,
         data: User,
         message: "No se encontro el usuario.",
       });
