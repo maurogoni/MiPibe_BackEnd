@@ -221,7 +221,7 @@ exports.loginUser = async function (user) {
     return { token: token, user: _details };
   } catch (e) {
     // return a Error message describing the reason
-    throw Error("Error while Login User");
+    throw Error("Error while Login User------->>>>>>>>>>: " + e.message);
   }
 };
 

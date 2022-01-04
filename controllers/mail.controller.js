@@ -22,14 +22,16 @@ exports.sendEmail = async function (req, res, next) {
     to: req.body.destinatario,
     subject: req.body.asunto,
     html:
-      "<h1> y aca se muestra el texto  </h1><h3>" + req.body.texto + "</h3>",
+      "<h3>" + req.body.texto + "</h3>",
   };
   console.log("mail", mailOptions);
   // Enviamos el email
   try {
     let info = await transporter.sendMail(mailOptions);
     console.log("Message sent: %s", info.messageId);
+    return res.status(200).json({ status: 200, message: "Mensaje enviado correctamente" });
   } catch (error) {
     console.log("Error envio mail: ", error);
+    throw(e);
   }
 };
